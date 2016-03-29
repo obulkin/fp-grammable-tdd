@@ -1,5 +1,6 @@
 source 'https://rubygems.org'
-
+# Add gem needed for Heroku support
+gem "rails_12factor", group: :production
 
 # Bundle edge Rails instead: gem 'rails', github: 'rails/rails'
 gem 'rails', '4.2.5.1'
