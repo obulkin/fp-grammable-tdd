@@ -1,4 +1,7 @@
 source 'https://rubygems.org'
+# Add Bootstrap 3 via Sass
+gem "bootstrap-sass", "~>3.3.6"
+
 # Add gem needed for Heroku support
 gem "rails_12factor", group: :production
 
