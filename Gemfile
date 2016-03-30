@@ -1,4 +1,10 @@
 source 'https://rubygems.org'
+# Use Devise for easy authentication
+gem "devise"
+
+# Add Simple Form for easy form creation
+gem "simple_form"
+
 # Add Bootstrap 3 via Sass
 gem "bootstrap-sass", "~>3.3.6"
 
