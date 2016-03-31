@@ -31,3 +31,13 @@ h1, h2, h3, h4, h5, h6 {
 	border-color: #e4e4e4 #bebebd #bebebd #e4e4e4;
 	padding: 15px;
 }
+
+.has-error {
+	background-color: #ffeeee;
+	border-radius: 3px;
+	padding: 0 3px;
+}
+
+.help-block {
+	text-transform: uppercase;
+}
