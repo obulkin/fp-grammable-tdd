@@ -1,4 +1,6 @@
 class GramsController < ApplicationController
+  before_action :authenticate_user!, only: [:new, :create]
+
   def index
   end
 
@@ -7,7 +9,7 @@ class GramsController < ApplicationController
   end
 
   def create
-    @gram = Gram.new gram_params
+    @gram = Gram.new gram_params.merge(user_id: current_user.id)
     if @gram.save
       redirect_to root_path
     else

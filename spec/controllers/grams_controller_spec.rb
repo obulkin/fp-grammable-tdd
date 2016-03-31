@@ -1,6 +1,8 @@
 require 'rails_helper'
 
 RSpec.describe GramsController, :type => :controller do
+  let(:user) {User.create email: "o.bulkin@gmail.com", password: "test_pass"}
+
   describe "#index" do
     it "should respond to a GET successfully" do
       get :index
@@ -9,25 +11,47 @@ RSpec.describe GramsController, :type => :controller do
   end
 
   describe "#new" do
-    it "should respond to a GET successfully" do
-      get :new
-      expect(response).to have_http_status(:success)
+    context "when a user is signed in" do 
+      it "should respond to a GET successfully" do
+        sign_in user
+        get :new
+        expect(response).to have_http_status(:success)
+      end
+    end
+
+    context "when no one is signed in" do
+      it "should respond to a GET by redirecting to the sign in page" do
+        get :new
+        expect(response).to redirect_to(new_user_session_path)
+      end
     end
   end
 
   describe "#create" do
-    it "should respond to a POST with a message by creating a new gram with that message and redirecting to the homepage" do
-      post :create, gram: {message: "Hello!"}
-      expect(response).to redirect_to(root_path)
+    context "when a user is signed in" do
+      it "should respond to a POST with a message by creating a new gram with that message and redirecting to the homepage" do
+        sign_in user
+        post :create, gram: {message: "Hello!"}
+        expect(response).to redirect_to(root_path)
 
-      gram = Gram.last
-      expect(gram.message).to eq("Hello!")
+        gram = Gram.last
+        expect(gram.message).to eq("Hello!")
+        expect(gram.user).to eq(user)
+      end
+
+      it "should respond to a POST with a validation error by returning a 422 and not creating a new gram" do
+        sign_in user
+        post :create, gram: {message: ""}
+        expect(response).to have_http_status(:unprocessable_entity)
+        expect(Gram.count).to eq(0)
+      end
     end
 
-    it "should respond to a POST with a validation error by returning a 422 and not creating a new gram" do
-      post :create, gram: {message: ""}
-      expect(response).to have_http_status(:unprocessable_entity)
-      expect(Gram.count).to eq(0)
+    context "when no one is signed in" do
+      it "should respond to a POST by redirecting to the sign in page" do
+        post :create
+        expect(response).to redirect_to(new_user_session_path)
+      end
     end
   end
 end
