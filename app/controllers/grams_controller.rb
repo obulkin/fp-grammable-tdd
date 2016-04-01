@@ -4,6 +4,10 @@ class GramsController < ApplicationController
   def index
   end
 
+  def show
+    @gram = Gram.find params[:id]
+  end
+
   def new
     @gram = Gram.new
   end

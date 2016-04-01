@@ -8,6 +8,18 @@ RSpec.describe GramsController, :type => :controller do
     end
   end
 
+  describe "#show" do
+    it "should respond to a GET with a valid gram ID successfully" do
+      gram = create :gram
+      get :show, id: gram.id
+      expect(response).to have_http_status(:success)
+    end
+
+    it "should respond to a GET with an invalid gram ID by raising a RecordNotFound error" do
+      expect{get :show, id: "invalid_id"}.to raise_error(ActiveRecord::RecordNotFound)
+    end
+  end
+
   describe "#new" do
     context "when a user is signed in" do 
       it "should respond to a GET successfully" do
