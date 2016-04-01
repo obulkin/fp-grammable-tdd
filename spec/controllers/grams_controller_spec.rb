@@ -1,8 +1,6 @@
 require 'rails_helper'
 
 RSpec.describe GramsController, :type => :controller do
-  let(:user) {User.create email: "o.bulkin@gmail.com", password: "test_pass"}
-
   describe "#index" do
     it "should respond to a GET successfully" do
       get :index
@@ -13,7 +11,7 @@ RSpec.describe GramsController, :type => :controller do
   describe "#new" do
     context "when a user is signed in" do 
       it "should respond to a GET successfully" do
-        sign_in user
+        sign_in create(:user)
         get :new
         expect(response).to have_http_status(:success)
       end
@@ -30,6 +28,7 @@ RSpec.describe GramsController, :type => :controller do
   describe "#create" do
     context "when a user is signed in" do
       it "should respond to a POST with a message by creating a new gram with that message and redirecting to the homepage" do
+        user = create :user
         sign_in user
         post :create, gram: {message: "Hello!"}
         expect(response).to redirect_to(root_path)
@@ -40,7 +39,7 @@ RSpec.describe GramsController, :type => :controller do
       end
 
       it "should respond to a POST with a validation error by returning a 422 and not creating a new gram" do
-        sign_in user
+        sign_in create(:user)
         post :create, gram: {message: ""}
         expect(response).to have_http_status(:unprocessable_entity)
         expect(Gram.count).to eq(0)

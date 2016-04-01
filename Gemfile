@@ -48,6 +48,9 @@ group :development, :test do
 
   # Use RSpec for testing
   gem "rspec-rails", "~> 3.0"
+
+  # Use factory_girl to simplify test data creation
+  gem "factory_girl_rails", "~> 4.0"
 end
 
 group :development do
@@ -57,4 +60,3 @@ group :development do
   # Spring speeds up development by keeping your application running in the background. Read more: https://github.com/rails/spring
   gem 'spring'
 end
-
