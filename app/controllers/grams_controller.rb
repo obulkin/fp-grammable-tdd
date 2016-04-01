@@ -21,6 +21,19 @@ class GramsController < ApplicationController
     end
   end
 
+  def edit
+    @gram = Gram.find params[:id]
+  end
+
+  def update
+    @gram = Gram.find params[:id]
+    if @gram.update_attributes gram_params
+      redirect_to gram_path(@gram)
+    else
+      render "edit", status: :unprocessable_entity
+    end
+  end
+
   private
   def gram_params
     params.require(:gram).permit(:message)

@@ -39,7 +39,7 @@ RSpec.describe GramsController, :type => :controller do
 
   describe "#create" do
     context "when a user is signed in" do
-      it "should respond to a POST with a message by creating a new gram with that message and redirecting to the homepage" do
+      it "should respond to a POST with valid data by creating a new gram with that data and redirecting to the homepage" do
         user = create :user
         sign_in user
         post :create, gram: {message: "Hello!"}
@@ -64,5 +64,39 @@ RSpec.describe GramsController, :type => :controller do
         expect(response).to redirect_to(new_user_session_path)
       end
     end
+  end
+
+  describe "#edit" do
+    it "should respond to a GET with a valid gram ID successfully" do
+      gram = create :gram
+      get :edit, id: gram.id
+      expect(response).to have_http_status(:success)
+    end
+
+    it "should respond to a GET with an invalid gram ID by raising a RecordNotFound error" do
+      expect{get :edit, id: "invalid_id"}.to raise_error(ActiveRecord::RecordNotFound)
+    end
+  end
+
+  describe "#update" do
+    it "should respond to a PUT with an invalid gram ID by raising a RecordNotFound error" do
+      expect{put :update, id: "invalid_id"}.to raise_error(ActiveRecord::RecordNotFound)
+    end
+
+    it "should respond to a PUT with a valid gram ID and a validation error by returning a 422 and not updating the gram" do
+      gram = create :gram, message: "Original Message"
+      put :update, id: gram.id, gram: {message: ""}
+      expect(response).to have_http_status(:unprocessable_entity)
+      expect(gram.message).to eq("Original Message")
+    end
+
+    it "should respond to a PUT with a valid gram ID and valid data by updating the gram with that data and redirecting to its show page" do
+      gram = create :gram, message: "Original Message"
+      put :update, id: gram.id, gram: {message: "New Message"}
+      expect(response).to redirect_to(gram_path gram)
+
+      gram.reload
+      expect(gram.message).to eq("New Message")
+    end 
   end
 end
