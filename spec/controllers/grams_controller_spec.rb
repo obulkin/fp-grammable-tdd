@@ -99,4 +99,17 @@ RSpec.describe GramsController, :type => :controller do
       expect(gram.message).to eq("New Message")
     end 
   end
+
+  describe "#destroy" do
+    it "should respond to a DELETE with an invalid gram ID by raising a RecordNotFound error" do
+      expect{delete :destroy, id: "invalid_id"}.to raise_error(ActiveRecord::RecordNotFound)
+    end
+
+    it "should respond to a DELETE with a valid gram ID by deleting the gram and redirecting to the homepage" do
+      gram = create :gram
+      delete :destroy, id: gram.id
+      expect(response).to redirect_to(root_path)
+      expect{gram.reload}.to raise_error(ActiveRecord::RecordNotFound)
+    end
+  end
 end

@@ -34,6 +34,11 @@ class GramsController < ApplicationController
     end
   end
 
+  def destroy
+    Gram.find(params[:id]).destroy
+    redirect_to root_path
+  end
+
   private
   def gram_params
     params.require(:gram).permit(:message)
