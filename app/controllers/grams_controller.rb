@@ -1,7 +1,9 @@
 class GramsController < ApplicationController
-  before_action :authenticate_user!, only: [:new, :create]
+  before_action :authenticate_user!, except: [:index, :show]
+  before_action :check_for_gram_owner, only: [:edit, :update, :destroy]
 
   def index
+    @grams = Gram.all
   end
 
   def show
@@ -42,5 +44,9 @@ class GramsController < ApplicationController
   private
   def gram_params
     params.require(:gram).permit(:message)
+  end
+
+  def check_for_gram_owner
+    render text: "Forbidden: This can only be done by the creator of the gram.", status: :forbidden if current_user != Gram.find(params[:id]).user
   end
 end

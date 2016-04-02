@@ -67,49 +67,115 @@ RSpec.describe GramsController, :type => :controller do
   end
 
   describe "#edit" do
-    it "should respond to a GET with a valid gram ID successfully" do
-      gram = create :gram
-      get :edit, id: gram.id
-      expect(response).to have_http_status(:success)
+    context "when the gram owner is signed in" do
+      it "should respond to a GET with a valid gram ID successfully" do
+        gram = create :gram
+        sign_in gram.user
+        get :edit, id: gram.id
+        expect(response).to have_http_status(:success)
+      end
     end
 
-    it "should respond to a GET with an invalid gram ID by raising a RecordNotFound error" do
-      expect{get :edit, id: "invalid_id"}.to raise_error(ActiveRecord::RecordNotFound)
+    context "when a different user is signed in" do
+      it "should respond to a GET with a valid gram ID by returning a 403" do
+        gram = create :gram
+        sign_in create(:user)
+        get :edit, id: gram.id
+        expect(response).to have_http_status(:forbidden)
+      end
+
+      it "should respond to a GET with an invalid gram ID by raising a RecordNotFound error" do
+        sign_in create(:user)
+        expect{get :edit, id: "invalid_id"}.to raise_error(ActiveRecord::RecordNotFound)
+      end
+    end
+
+    context "when no one is signed in" do
+      it "should respond to a GET by redirecting to the sign in page" do
+        gram = create :gram
+        get :edit, id: gram.id
+        expect(response).to redirect_to(new_user_session_path)
+      end
     end
   end
 
   describe "#update" do
-    it "should respond to a PUT with an invalid gram ID by raising a RecordNotFound error" do
-      expect{put :update, id: "invalid_id"}.to raise_error(ActiveRecord::RecordNotFound)
+    context "when the gram owner is signed in" do
+      it "should respond to a PUT with a valid gram ID and a validation error by returning a 422 and not updating the gram" do
+        gram = create :gram, message: "Original Message"
+        sign_in gram.user
+        put :update, id: gram.id, gram: {message: ""}
+        expect(response).to have_http_status(:unprocessable_entity)
+        expect(gram.message).to eq("Original Message")
+      end
+
+      it "should respond to a PUT with a valid gram ID and valid data by updating the gram with that data and redirecting to its show page" do
+        gram = create :gram, message: "Original Message"
+        sign_in gram.user
+        put :update, id: gram.id, gram: {message: "New Message"}
+        expect(response).to redirect_to(gram_path gram)
+
+        gram.reload
+        expect(gram.message).to eq("New Message")
+      end
     end
 
-    it "should respond to a PUT with a valid gram ID and a validation error by returning a 422 and not updating the gram" do
-      gram = create :gram, message: "Original Message"
-      put :update, id: gram.id, gram: {message: ""}
-      expect(response).to have_http_status(:unprocessable_entity)
-      expect(gram.message).to eq("Original Message")
+    context "when a different user is signed in" do
+      it "should respond to a PUT with a valid gram ID and any data by returning a 403 and not updating the gram" do
+        gram = create :gram, message: "Original Message"
+        sign_in create(:user)
+        put :update, id: gram.id, gram: {message: "New Message"}
+        expect(response).to have_http_status(:forbidden)
+        expect(gram.message).to eq("Original Message")
+      end
+
+      it "should respond to a PUT with an invalid gram ID by raising a RecordNotFound error" do
+        sign_in create(:user)
+        expect{put :update, id: "invalid_id"}.to raise_error(ActiveRecord::RecordNotFound)
+      end
     end
 
-    it "should respond to a PUT with a valid gram ID and valid data by updating the gram with that data and redirecting to its show page" do
-      gram = create :gram, message: "Original Message"
-      put :update, id: gram.id, gram: {message: "New Message"}
-      expect(response).to redirect_to(gram_path gram)
-
-      gram.reload
-      expect(gram.message).to eq("New Message")
+    context "when no one is signed in" do
+      it "should respond to a PUT by redirecting to the sign in page" do
+        gram = create :gram
+        put :update, id: gram.id
+        expect(response).to redirect_to(new_user_session_path)
+      end
     end 
   end
 
   describe "#destroy" do
-    it "should respond to a DELETE with an invalid gram ID by raising a RecordNotFound error" do
-      expect{delete :destroy, id: "invalid_id"}.to raise_error(ActiveRecord::RecordNotFound)
+    context "when the gram owner is signed in" do
+      it "should respond to a DELETE with a valid gram ID by deleting the gram and redirecting to the homepage" do
+        gram = create :gram
+        sign_in gram.user
+        delete :destroy, id: gram.id
+        expect(response).to redirect_to(root_path)
+        expect{gram.reload}.to raise_error(ActiveRecord::RecordNotFound)
+      end
     end
 
-    it "should respond to a DELETE with a valid gram ID by deleting the gram and redirecting to the homepage" do
-      gram = create :gram
-      delete :destroy, id: gram.id
-      expect(response).to redirect_to(root_path)
-      expect{gram.reload}.to raise_error(ActiveRecord::RecordNotFound)
+    context "when a different user is signed in" do
+      it "should respond to a DELETE with a valid gram ID by returning a 403 and not deleting the gram" do
+        gram = create :gram
+        sign_in create(:user)
+        delete :destroy, id: gram.id
+        expect(response).to have_http_status(:forbidden)
+        expect{gram.reload}.not_to raise_error
+      end
+
+      it "should respond to a DELETE with an invalid gram ID by raising a RecordNotFound error" do
+        sign_in create(:user)      
+        expect{delete :destroy, id: "invalid_id"}.to raise_error(ActiveRecord::RecordNotFound)
+      end
+    end
+
+    context "when no one is signed in" do
+      it "should respond to a PUT by redirecting to the sign in page" do
+        gram = create :gram
+        put :update, id: gram.id
+        expect(response).to redirect_to(new_user_session_path)
+      end
     end
   end
 end
