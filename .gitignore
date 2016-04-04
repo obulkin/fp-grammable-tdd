@@ -14,3 +14,6 @@
 
 # Ignore OS X folder attribute files
 .DS_Store
+
+# Ignore any files uploaded locally in dev
+/public/uploads

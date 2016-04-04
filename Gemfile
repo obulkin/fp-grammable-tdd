@@ -1,4 +1,7 @@
 source 'https://rubygems.org'
+# Use CarrierWave for easy file upload
+gem "carrierwave"
+
 # Use Devise for easy authentication
 gem "devise"
 
