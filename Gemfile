@@ -1,4 +1,10 @@
 source 'https://rubygems.org'
+# Use fog to connect CarrierWave to Amazon S3
+gem "fog"
+
+# Add Figaro to facilitate setting environment variables
+gem "figaro"
+
 # Use CarrierWave for easy file upload
 gem "carrierwave"
 
