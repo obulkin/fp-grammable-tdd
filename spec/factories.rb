@@ -9,4 +9,10 @@ FactoryGirl.define do
     image {File.open "#{Rails.root}/spec/support/sample.jpg"}
     association :user
   end
+
+  factory :comment do
+    message "Comment stuff"
+    association :user
+    association :gram
+  end
 end
