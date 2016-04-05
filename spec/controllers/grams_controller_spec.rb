@@ -42,12 +42,13 @@ RSpec.describe GramsController, :type => :controller do
       it "should respond to a POST with valid data by creating a new gram with that data and redirecting to the homepage" do
         user = create :user
         sign_in user
-        post :create, gram: {message: "Hello!"}
+        post :create, gram: {message: "Hello!", image: Rack::Test::UploadedFile.new("#{Rails.root}/spec/support/sample.jpg", "image/jpeg")}
         expect(response).to redirect_to(root_path)
 
         gram = Gram.last
         expect(gram.message).to eq("Hello!")
         expect(gram.user).to eq(user)
+        expect(gram.image_identifier).to eq("sample.jpg")
       end
 
       it "should respond to a POST with a validation error by returning a 422 and not creating a new gram" do

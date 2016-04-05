@@ -6,6 +6,7 @@ FactoryGirl.define do
 
   factory :gram do
     message "Gram stuff"
+    image {File.open "#{Rails.root}/spec/support/sample.jpg"}
     association :user
   end
 end
