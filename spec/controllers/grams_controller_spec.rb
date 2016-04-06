@@ -147,12 +147,14 @@ RSpec.describe GramsController, :type => :controller do
 
   describe "#destroy" do
     context "when the gram owner is signed in" do
-      it "should respond to a DELETE with a valid gram ID by deleting the gram and redirecting to the homepage" do
-        gram = create :gram
+      it "should respond to a DELETE with a valid gram ID by deleting the gram and its comments and redirecting to the homepage" do
+        gram = create :gram_with_comments
+        comments = gram.comments
         sign_in gram.user
         delete :destroy, id: gram.id
         expect(response).to redirect_to(root_path)
         expect{gram.reload}.to raise_error(ActiveRecord::RecordNotFound)
+        expect(comments.reload.present?).to eq(false)
       end
     end
 
