@@ -14,6 +14,23 @@
 @import "bootstrap-sprockets";
 @import "bootstrap";
 @import "devise";
+@import "grams";
+
+body {
+	background-color: #eaeaea;
+	font-family: "Josefin Sans", sans-serif;
+}
+
+.navbar {
+	border-radius: 0;
+}
+
+.navbar-inverse .navbar-brand {
+	color: #4aa6e8;
+	font-size: 25px;
+	font-family: Pacifico, cursive;
+	padding-top: 10px;
+}
 
 .alert {
 	display: inline-block;
@@ -25,11 +42,15 @@ h1, h2, h3, h4, h5, h6 {
 }
 
 .box {
-	box-shadow: 1px 1px 2px 0 #d0d0d0;
-	background: #fff;
-	border: 1px solid #ccc;
-	border-color: #e4e4e4 #bebebd #bebebd #e4e4e4;
+	box-shadow: 0 1px 0 rgba(0, 0, 0, 0.25);
+	background-color: #fff;
+	border: 1px solid #e8e8e8;
+	border-radius: 0.25rem;
 	padding: 15px;
+}
+
+.img-responsive {
+	width: 100%;
 }
 
 .has-error {

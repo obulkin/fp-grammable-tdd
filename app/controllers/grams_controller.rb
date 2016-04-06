@@ -8,6 +8,8 @@ class GramsController < ApplicationController
 
   def show
     @gram = Gram.find params[:id]
+    @comment = Comment.new
+    @gram_comments = @gram.comments
   end
 
   def new

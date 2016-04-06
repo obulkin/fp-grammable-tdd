@@ -1,3 +1,44 @@
 // Place all the styles related to the grams controller here.
 // They will automatically be included in application.css.
 // You can use Sass (SCSS) here: http://sass-lang.com/
+
+.user-handle {
+	color: #4aa6e8;
+	font-weight: bold;
+	font-size: 18px;
+	line-height: 35px;
+}
+
+.box img {
+	margin-top: 10px;
+}
+
+.gram-changes {
+	float: right;
+}
+
+.hidden-br {
+	display: none;
+}
+
+@media (max-width: 767px) {
+	.gram-changes {
+		float: left;
+	}
+
+	.hidden-br {
+		display: inline;
+	}
+}
+
+.gram-message {
+	font-size: 18px;
+	color: black;
+}
+
+blockquote {
+    background: #f9f9f9;
+    border-left: 10px solid #ccc;
+    margin: 1em 0px;
+    padding: 0.5em 10px;
+}

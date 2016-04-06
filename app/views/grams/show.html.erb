@@ -1,0 +1,40 @@
+<div class="container-fluid">
+	<div class="row">
+		<div class="col-xs-10 col-xs-offset-1 box">
+			<span class="user-handle"><%= @gram.user.email %></span>
+			<% if current_user && current_user == @gram.user %>
+				<br class="hidden-br">
+				<div class="gram-changes">
+					<%= link_to "Edit Gram", edit_gram_path(@gram), class: "btn btn-primary" %>
+					<%= link_to "Delete", gram_path(@gram), method: :delete, class: "btn btn-primary", data: {confirm: "Are you sure you want to delete this gram?"} %>
+				</div>
+				<div class="clearfix"></div>
+			<% end %>
+			<%= image_tag @gram.image, class: "img-responsive" %>
+			<br>
+			<div class="text-center gram-message"><%= @gram.message %></div>
+		</div>
+	</div>
+	<br>
+	<div class="row">
+		<div class="col-xs-10 col-xs-offset-1 box">
+			<h3>Add Comment</h3>
+			<br>
+			<%= simple_form_for [@gram, @comment] do |f| %>
+				<%= f.input :message %>
+				<%= f.submit "Post", class: "btn btn-primary" %>
+			<% end %>
+			<% if @gram_comments.present? %>
+				<hr>
+				<h3>Comments</h3>
+				<% @gram_comments.each do |comment| %>
+					<blockquote>
+						<%= comment.message %>
+						<small><%= comment.user.email %></small>
+					</blockquote>
+				<% end %>
+			<% end %>
+		</div>
+	</div>
+	<br>
+</div>

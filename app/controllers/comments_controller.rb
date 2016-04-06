@@ -7,6 +7,7 @@ class CommentsController < ApplicationController
     if @comment.save
       redirect_to gram_path(@gram)
     else
+      @gram_comments = @gram.comments
       render "grams/show", status: :unprocessable_entity
     end
   end

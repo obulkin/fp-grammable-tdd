@@ -4,6 +4,7 @@ Rails.application.routes.draw do
   resources :grams, except: :index do
     resources :comments, only: :create
   end
+  get "grams/:gram_id/comments" => redirect("grams/%{gram_id}")
   # The priority is based upon order of creation: first created -> highest priority.
   # See how all your routes lay out with "rake routes".
 
